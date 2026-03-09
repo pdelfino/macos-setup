@@ -23,8 +23,8 @@ mkdir -p "$PROJECTS_DIR"
 
 repos=(
     "emacs-config"
-    "my-karabiner-elements-config"
-    "iTerm2-config"
+    "karabiner-config"
+    "iterm2-config"
     "claude-config"
     "zshrc"
     "homerow-config"
@@ -45,8 +45,7 @@ mkdir -p ~/.emacs.d
 ln -sf "$PROJECTS_DIR/emacs-config/init.el" ~/.emacs.d/init.el
 
 # Karabiner
-mkdir -p ~/.config/karabiner
-ln -sf "$PROJECTS_DIR/my-karabiner-elements-config/karabiner.json" ~/.config/karabiner/karabiner.json
+ln -sf "$PROJECTS_DIR/karabiner-config" ~/.config/karabiner
 
 # Zsh
 ln -sf "$PROJECTS_DIR/zshrc/.zshrc" ~/.zshrc
@@ -95,7 +94,7 @@ echo "=== Applying app preferences ==="
 echo ""
 echo "=== Done! ==="
 echo "Remaining manual steps:"
-echo "  1. Open iTerm2 and import profile from iTerm2-config repo"
+echo "  1. Open iTerm2 and import profile from iterm2-config repo"
 echo "  2. Log into Brave, Chrome, Slack, Signal"
 echo "  3. Install Homerow from https://www.homerow.app/"
 echo "  4. Restart apps for preferences to take effect"

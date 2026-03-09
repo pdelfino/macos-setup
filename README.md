@@ -50,9 +50,9 @@ This repo is the glue. The real configs live in their own repos:
 | Repo | What | Key feature |
 |------|------|-------------|
 | [emacs-config](https://github.com/pdelfino/emacs-config) | Emacs setup | Ivy, Projectile, Paredit, Claude Code integration |
-| [my-karabiner-elements-config](https://github.com/pdelfino/my-karabiner-elements-config) | Karabiner Elements | Emacs keybindings system-wide on macOS |
+| [karabiner-config](https://github.com/pdelfino/karabiner-config) | Karabiner Elements | Emacs keybindings system-wide on macOS |
 | [homerow-config](https://github.com/pdelfino/homerow-config) | Homerow + Maccy | Click anything without a mouse, M-y clipboard history |
-| [iTerm2-config](https://github.com/pdelfino/iTerm2-config) | iTerm2 | Terminal preferences and profiles |
+| [iterm2-config](https://github.com/pdelfino/iterm2-config) | iTerm2 | Terminal preferences and profiles |
 | [zshrc](https://github.com/pdelfino/zshrc) | Zsh config | Shell aliases, plugins, environment |
 | [claude-config](https://github.com/pdelfino/claude-config) | Claude Code | AI assistant configuration |
 
