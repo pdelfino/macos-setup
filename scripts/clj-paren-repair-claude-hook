@@ -1,0 +1,33 @@
+#!/usr/bin/env bb
+
+; :bbin/start
+;
+; {:coords
+;  {:git/url "https://github.com/bhauman/clojure-mcp-light.git",
+;   :git/sha "401e2746d1dea1d29cd9e69c35f22e844e104c2d"},
+;  :lib
+;  org.babashka.bbin/script--693757147-https-github-com-bhauman-clojure-mcp-light-git}
+;
+; :bbin/end
+
+(require '[babashka.process :as process]
+         '[babashka.fs :as fs]
+         '[clojure.string :as str])
+
+(def script-root "/Users/pedro/.gitlibs/libs/org.babashka.bbin/script--693757147-https-github-com-bhauman-clojure-mcp-light-git/401e2746d1dea1d29cd9e69c35f22e844e104c2d")
+(def script-lib 'org.babashka.bbin/script--693757147-https-github-com-bhauman-clojure-mcp-light-git)
+(def script-coords {:git/url "https://github.com/bhauman/clojure-mcp-light.git", :git/sha "401e2746d1dea1d29cd9e69c35f22e844e104c2d"})
+(def script-main-opts-first "-m")
+(def script-main-opts-second "clojure-mcp-light.hook")
+
+(def tmp-edn
+  (doto (fs/file (fs/temp-dir) (str (gensym "bbin")))
+    (spit (str "{:deps {" script-lib script-coords "}}"))
+    (fs/delete-on-exit)))
+
+(def base-command
+  ["bb" "--deps-root" script-root "--config" (str tmp-edn)
+        script-main-opts-first script-main-opts-second
+        "--"])
+
+(process/exec (into base-command *command-line-args*))

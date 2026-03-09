@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "clojure-mcp-frontend": {
+      "type": "stdio",
+      "command": "clojure",
+      "args": [
+        "-Tmcp",
+        "start",
+        ":config-profile",
+        ":cli-assist"
+      ],
+      "cwd": "/Users/pedro/projects/balance/bases/balance",
+      "env": {
+        "JAVA_HOME": "/opt/homebrew/opt/openjdk"
+      }
+    },
+    "clojure-mcp-backend": {
+      "type": "stdio",
+      "command": "clojure",
+      "args": [
+        "-Tmcp",
+        "start",
+        ":config-profile",
+        ":cli-assist"
+      ],
+      "cwd": "/Users/pedro/projects/balance/bases/voyage",
+      "env": {
+        "JAVA_HOME": "/opt/homebrew/opt/openjdk"
+      }
+    }
+  }
+}
