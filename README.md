@@ -1,6 +1,6 @@
 # macos-setup
 
-![Apollo in the Forge of Vulcan](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg/700px-Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg)
+![Apollo in the Forge of Vulcan](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg/960px-Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg)
 
 *"Apollo in the Forge of Vulcan" (1630) by Diego Velázquez — [Wikipedia](https://en.wikipedia.org/wiki/Apollo_in_the_Forge_of_Vulcan)*
 
