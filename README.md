@@ -53,6 +53,21 @@ All Homebrew packages, casks, and fonts. Includes Emacs (Mac port), Clojure tool
 |--------|-------------|
 | `clj-paren-repair-claude-hook` | Babashka hook for Clojure paren repair |
 | `focus-automated-chrome.sh` | Focus Selenium-controlled Chrome instances |
+| `tidy.sh` | Weekly housekeeping (see below). `--dry-run` to preview |
+
+### Housekeeping: the three-bucket home
+
+The home folder follows one rule so it never drifts back into a 500-item Downloads and 20 GB free:
+
+| Bucket | Holds | Policy |
+|--------|-------|--------|
+| `~/projects` | git repos only | nothing else lives here |
+| `~/scratch` | experiments, screenshots, one-off exports | anything untouched 90 days is deleted |
+| `~/Downloads` | inbox | anything older than 30 days gets filed into a repo or deleted, no third state |
+
+Large media that a repo reads (photo sets, video masters) lives on the external T7 and in R2, never on the internal disk.
+
+`scripts/tidy.sh` enforces the mechanical half every Sunday at 09:00 via `launchd/com.pedro.tidy.plist`: it prunes npm/uv/pip/brew caches, deletes Trash items older than 30 days and `~/scratch` entries older than 90, and writes a report of stale Downloads to `~/scratch/tidy.log` without deleting them. The bootstrap installs the job and points macOS screenshots at `~/scratch/screenshots`.
 
 ## The Keyboard-Driven Ecosystem
 

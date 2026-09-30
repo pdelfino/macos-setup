@@ -91,6 +91,15 @@ echo "=== Applying app preferences ==="
 # Homerow + Maccy
 "$PROJECTS_DIR/homerow-config/setup.sh"
 
+echo "=== Installing weekly tidy job (launchd) ==="
+# scripts/tidy.sh runs Sunday 09:00: prunes caches, old Trash and
+# ~/scratch, and reports stale Downloads. Log: ~/scratch/tidy.log
+mkdir -p ~/scratch/screenshots ~/Library/LaunchAgents
+defaults write com.apple.screencapture location ~/scratch/screenshots
+cp -f "$SCRIPT_DIR/launchd/com.pedro.tidy.plist" ~/Library/LaunchAgents/com.pedro.tidy.plist
+launchctl bootout "gui/$(id -u)/com.pedro.tidy" 2>/dev/null || true
+launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.pedro.tidy.plist
+
 echo ""
 echo "=== Done! ==="
 echo "Remaining manual steps:"
