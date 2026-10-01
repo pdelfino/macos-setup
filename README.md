@@ -67,7 +67,7 @@ The home folder follows one rule so it never drifts back into a 500-item Downloa
 
 Large media that a repo reads (photo sets, video masters) lives on the external T7 and in R2, never on the internal disk.
 
-`scripts/tidy.sh` enforces the mechanical half every Sunday at 09:00 via `launchd/com.pedro.tidy.plist`: it prunes npm/uv/pip/brew caches, deletes Trash items older than 30 days and `~/scratch` entries older than 90, and writes a report of stale Downloads to `~/scratch/tidy.log` without deleting them. The bootstrap installs the job. Screenshots keep landing in `~/Documents` because the `/peek` skill reads the newest file there; old ones get moved to `~/scratch/screenshots` by hand or by a future tidy step.
+`scripts/tidy.sh` enforces the mechanical half every Sunday at 09:00 via `launchd/com.pedro.tidy.plist`: it prunes npm/uv/pip/brew caches, deletes Trash items older than 30 days and `~/scratch` entries older than 90, and writes a report of stale Downloads to `~/scratch/tidy.log` without deleting them. The bootstrap installs the job. Screenshots keep landing in `~/Documents` because the `/peek` skill reads the newest file there; the tidy job moves any older than a week into `~/scratch/screenshots/archive-YYYY-MM`.
 
 ## The Keyboard-Driven Ecosystem
 

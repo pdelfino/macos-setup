@@ -8,6 +8,9 @@
 #      or, for uv, if another uv process holds the cache lock).
 #   3. ~/scratch: delete top-level entries untouched for 90+ days.
 #      ~/scratch/screenshots is pruned per file with the same rule.
+#   3b. ~/Documents: move screenshots older than 7 days into
+#      ~/scratch/screenshots/archive-YYYY-MM (they land in Documents for
+#      the /peek skill).
 #   4. Downloads: REPORT (never delete) items older than 30 days, so the
 #      next Claude session or Pedro can file or drop them.
 #   5. Print free space before and after.
@@ -33,6 +36,7 @@ DRY=0
 TRASH_DAYS=30
 SCRATCH_DAYS=90
 DOWNLOADS_DAYS=30
+SCREENSHOT_DAYS=7
 
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 run() { if [ "$DRY" = 1 ]; then log "DRY: $*"; else "$@" >/dev/null 2>&1; fi; }
@@ -76,6 +80,18 @@ if [ -d "$HOME/scratch" ]; then
     done
     find "$HOME/scratch/screenshots" -mindepth 1 -type d -empty -delete 2>/dev/null
 fi
+
+# 3b. Screenshots in ~/Documents older than a week move to the scratch
+#     archive. They land in Documents on purpose (the /peek skill reads
+#     the newest file there); this keeps the pile from building up. mv
+#     keeps the capture date, so the 90-day expiry above counts from it.
+log "--- ~/Documents: screenshots older than $SCREENSHOT_DAYS days -> ~/scratch/screenshots"
+find "$HOME/Documents" -maxdepth 1 -type f \( -name 'Screenshot *.png' -o -name 'SCR-*.png' \) -mtime +"$SCREENSHOT_DAYS" -print 2>/dev/null | while IFS= read -r f; do
+    dest="$HOME/scratch/screenshots/archive-$(date -r "$f" '+%Y-%m')"
+    log "screenshot -> $(basename "$dest"): $(basename "$f")"
+    run mkdir -p "$dest"
+    run mv -n "$f" "$dest/"
+done
 
 # 4. Downloads: report only.
 log "--- Downloads: items older than $DOWNLOADS_DAYS days (report only, nothing deleted)"
