@@ -69,6 +69,10 @@ mkdir -p ~/.config/gh
 ln -sf "$SCRIPT_DIR/config/gh/config.yml" ~/.config/gh/config.yml
 
 # Clojure
+# Hammerspoon (window prompt on ctrl+alt+cmd+space); grant Accessibility on first launch
+mkdir -p ~/.hammerspoon
+ln -sf "$SCRIPT_DIR/config/hammerspoon/init.lua" ~/.hammerspoon/init.lua
+
 mkdir -p ~/.config/clojure/tools
 ln -sf "$SCRIPT_DIR/config/clojure/deps.edn" ~/.config/clojure/deps.edn
 for f in "$SCRIPT_DIR"/config/clojure/*.edn; do
