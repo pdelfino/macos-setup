@@ -28,6 +28,56 @@ local function formLayout()
   if term then place(0.5, 0.5, 0.5, 0.5, term) end
 end
 
+-- Hold ctrl + cmd and drag anywhere inside a window to resize it from the nearest corner or edge.
+-- Added 2026-10-23: emacs-mac 29.4 (built for macOS 26) ignores edge drags on macOS 27, while
+-- resizing it through accessibility works, so Hammerspoon does the resize.
+local types = hs.eventtap.event.types
+local resizing = nil
+
+local function windowAt(p)
+  for _, w in ipairs(hs.window.orderedWindows()) do
+    local f = w:frame()
+    if p.x >= f.x and p.x <= f.x + f.w and p.y >= f.y and p.y <= f.y + f.h then return w end
+  end
+end
+
+local function side(v, lo, len)
+  if v < lo + len / 3 then return -1 elseif v > lo + 2 * len / 3 then return 1 else return 0 end
+end
+
+resizeTap = hs.eventtap.new({ types.leftMouseDown, types.leftMouseDragged, types.leftMouseUp }, function(e)
+  local t = e:getType()
+  if t == types.leftMouseDown then
+    local m = e:getFlags()
+    if not (m.ctrl and m.cmd) or m.alt or m.shift then return false end
+    local p = hs.mouse.absolutePosition()
+    local win = windowAt(p)
+    if not win then return false end
+    local f = win:frame()
+    local sx, sy = side(p.x, f.x, f.w), side(p.y, f.y, f.h)
+    if sx == 0 and sy == 0 then sx, sy = 1, 1 end
+    resizing = { win = win, f = f, p = p, sx = sx, sy = sy }
+    return true
+  elseif t == types.leftMouseDragged and resizing then
+    local r, p = resizing, hs.mouse.absolutePosition()
+    local dx, dy = p.x - r.p.x, p.y - r.p.y
+    local x, y, w, h = r.f.x, r.f.y, r.f.w, r.f.h
+    if r.sx == 1 then w = w + dx elseif r.sx == -1 then x, w = x + dx, w - dx end
+    if r.sy == 1 then h = h + dy elseif r.sy == -1 then y, h = y + dy, h - dy end
+    if w >= 200 and h >= 120 then r.win:setFrame({ x = x, y = y, w = w, h = h }) end
+    return true
+  elseif t == types.leftMouseUp and resizing then
+    resizing = nil
+    return true
+  end
+  return false
+end)
+resizeTap:start()
+-- macOS switches off a tap that is slow to answer (Hammerspoon busy); switch it back on.
+resizeWatch = hs.timer.doEvery(5, function()
+  if not resizeTap:isEnabled() then resizeTap:start() end
+end)
+
 local commands = {
   { text = "left half",            fn = function() place(0, 0, 0.5, 1) end },
   { text = "right half",           fn = function() place(0.5, 0, 0.5, 1) end },
