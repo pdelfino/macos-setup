@@ -32,6 +32,7 @@ end
 -- Added 2026-10-23: emacs-mac 29.4 (built for macOS 26) ignores edge drags on macOS 27, while
 -- resizing it through accessibility works, so Hammerspoon does the resize.
 local types = hs.eventtap.event.types
+resizeDebug = true  -- prints each mouse-down to the Hammerspoon console while this is being tuned
 local resizing = nil
 
 local function windowAt(p)
@@ -45,10 +46,17 @@ local function side(v, lo, len)
   if v < lo + len / 3 then return -1 elseif v > lo + 2 * len / 3 then return 1 else return 0 end
 end
 
-resizeTap = hs.eventtap.new({ types.leftMouseDown, types.leftMouseDragged, types.leftMouseUp }, function(e)
+-- ctrl+click can arrive as a right click (trackpad and mouse settings), so both buttons count.
+local downT = { [types.leftMouseDown] = true, [types.rightMouseDown] = true }
+local dragT = { [types.leftMouseDragged] = true, [types.rightMouseDragged] = true }
+local upT = { [types.leftMouseUp] = true, [types.rightMouseUp] = true }
+
+resizeTap = hs.eventtap.new({ types.leftMouseDown, types.leftMouseDragged, types.leftMouseUp,
+                              types.rightMouseDown, types.rightMouseDragged, types.rightMouseUp }, function(e)
   local t = e:getType()
-  if t == types.leftMouseDown then
+  if downT[t] then
     local m = e:getFlags()
+    if resizeDebug then print("resize: down type " .. t .. " flags " .. hs.inspect(m)) end
     if not (m.ctrl and m.cmd) or m.alt or m.shift then return false end
     local p = hs.mouse.absolutePosition()
     local win = windowAt(p)
@@ -58,7 +66,7 @@ resizeTap = hs.eventtap.new({ types.leftMouseDown, types.leftMouseDragged, types
     if sx == 0 and sy == 0 then sx, sy = 1, 1 end
     resizing = { win = win, f = f, p = p, sx = sx, sy = sy }
     return true
-  elseif t == types.leftMouseDragged and resizing then
+  elseif dragT[t] and resizing then
     local r, p = resizing, hs.mouse.absolutePosition()
     local dx, dy = p.x - r.p.x, p.y - r.p.y
     local x, y, w, h = r.f.x, r.f.y, r.f.w, r.f.h
@@ -66,7 +74,7 @@ resizeTap = hs.eventtap.new({ types.leftMouseDown, types.leftMouseDragged, types
     if r.sy == 1 then h = h + dy elseif r.sy == -1 then y, h = y + dy, h - dy end
     if w >= 200 and h >= 120 then r.win:setFrame({ x = x, y = y, w = w, h = h }) end
     return true
-  elseif t == types.leftMouseUp and resizing then
+  elseif upT[t] and resizing then
     resizing = nil
     return true
   end
