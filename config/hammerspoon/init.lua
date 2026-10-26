@@ -32,7 +32,7 @@ end
 -- Added 2026-10-23: emacs-mac 29.4 (built for macOS 26) ignores edge drags on macOS 27, while
 -- resizing it through accessibility works, so Hammerspoon does the resize.
 local types = hs.eventtap.event.types
-resizeDebug = true  -- prints each mouse-down to the Hammerspoon console while this is being tuned
+resizeDebug = false  -- set to true to print each mouse-down to the Hammerspoon console (tuning only)
 local resizing = nil
 
 local function windowAt(p)
