@@ -108,8 +108,29 @@ local commands = {
   { text = "focus iTerm",          fn = function() hs.application.launchOrFocus("iTerm") end },
   { text = "focus Ghostty",        fn = function() hs.application.launchOrFocus("Ghostty") end },
   { text = "focus Finder",         fn = function() hs.application.launchOrFocus("Finder") end },
+  { text = "record screen + mic (toggle, ctrl+alt+cmd+r)", fn = function() recordToggle() end },
   { text = "reload Hammerspoon config", fn = function() hs.reload() end },
 }
+
+-- Screen + mic recording (ctrl+alt+cmd+r toggles): ~/projects/claude-config/bin/record-screen.
+-- Start: notification with the file; 15 s later a second notification says whether sound is arriving.
+-- Stop: notification with the saved path. Files land in ~/Movies/recordings/.
+local recordScreen = os.getenv("HOME") .. "/projects/claude-config/bin/record-screen"
+local function recordNotify(title, out, err)
+  local text = ((out or "") .. (err or "")):gsub("%s+$", "")
+  hs.notify.new({ title = title, informativeText = text, withdrawAfter = 8 }):send()
+end
+function recordToggle()
+  hs.task.new(recordScreen, function(code, out, err)
+    recordNotify("record-screen", out, err)
+    if (out or ""):find("recording", 1, true) and not (out or ""):find("not recording", 1, true) then
+      hs.timer.doAfter(15, function()
+        hs.task.new(recordScreen, function(c2, o2, e2) recordNotify("record-screen level", o2, e2) end, { "check" }):start()
+      end)
+    end
+  end, { "toggle" }):start()
+end
+hs.hotkey.bind({ "ctrl", "alt", "cmd" }, "r", recordToggle)
 
 local chooser = hs.chooser.new(function(choice)
   if choice then commands[choice.index].fn() end
